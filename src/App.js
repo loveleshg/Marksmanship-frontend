@@ -10,7 +10,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("https://shooting-backend.loveleshg.workers.dev", {
+    const response = await fetch("https://shooting-backend.loveleshg.workers.dev/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
