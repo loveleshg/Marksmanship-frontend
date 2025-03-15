@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function App() {
   const [form, setForm] = useState({ name: "", age: "", category: "Pistol", email: "", phone: "" });
   const [paymentUrl, setPaymentUrl] = useState(null);
+  const [shooters, setShooters] = useState([]);
+
+  useEffect(() => {
+    fetchShooters();
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,6 +23,13 @@ function App() {
     
     const data = await response.json();
     setPaymentUrl(data.paymentLink);
+    fetchShooters(); // Refresh shooter list
+  };
+
+  const fetchShooters = async () => {
+    const response = await fetch("https://shooting-backend.loveleshg.workers.dev/shooters");
+    const data = await response.json();
+    setShooters(data);
   };
 
   return (
@@ -41,6 +53,29 @@ function App() {
           <a href={paymentUrl} target="_blank" rel="noopener noreferrer">Pay via UPI</a>
         </div>
       )}
+      <h2>Registered Shooters</h2>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Payment Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {shooters.map((shooter, index) => (
+            <tr key={index}>
+              <td>{shooter.name}</td>
+              <td>{shooter.category}</td>
+              <td>{shooter.email}</td>
+              <td>{shooter.phone}</td>
+              <td>{shooter.paymentStatus}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
