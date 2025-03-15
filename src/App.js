@@ -36,13 +36,14 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("https://api.eklavyashooting.com/register", form);
-      const { orderId } = response.data;
-      setPaymentUrl(`https://razorpay.com/pay/${orderId}`);
-    } catch (error) {
-      console.error("Registration failed", error);
-    }
+    const response = await fetch("https://shooting-backend.workers.dev/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form)
+    });
+    
+    const data = await response.json();
+    setPaymentUrl(data.paymentLink);
   };
 
   return (
